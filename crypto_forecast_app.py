@@ -9,6 +9,24 @@ from sklearn.neural_network import MLPRegressor
 st.set_page_config(page_title="Crypto Forecast", page_icon="📈", layout="wide")
 st.title("📈 Real-Time Crypto Price Forecast")
 
+# Hide Streamlit edit/pencil entry points in hosted UI.
+st.markdown(
+    """
+    <style>
+    button[title="Edit"],
+    button[aria-label="Edit"],
+    a[title="Edit"],
+    a[aria-label="Edit"],
+    a[href*="edit"],
+    a[href*="?edit"],
+    a[href*="&edit"] {
+        display: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 crypto = st.selectbox("Select Crypto", ["BTC-USD", "ETH-USD", "BNB-USD"])
 years = st.slider("Training data (years)", 1, 5, 2)
 window = st.slider("Look-back window (days)", 30, 120, 60, step=10)
