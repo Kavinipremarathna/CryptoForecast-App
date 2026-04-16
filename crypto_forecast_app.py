@@ -292,9 +292,6 @@ with forecast_col:
     st.metric("Forecast for next close", f"${next_price:,.2f}")
     st.write("This is the model's one-step-ahead estimate based on the latest window of prices.")
 
-    with st.expander("View latest market data", expanded=False):
-        st.dataframe(df.tail(12), use_container_width=True)
-
     with st.expander("Model settings", expanded=False):
         st.write(f"Crypto: {crypto}")
         st.write(f"Training history: {years} year(s)")
@@ -302,6 +299,13 @@ with forecast_col:
         st.write(f"Training iterations: {iterations}")
         st.write(f"Training rows: {len(features):,}")
     st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="section-title">Recent market data</div>', unsafe_allow_html=True)
+st.markdown('<div class="data-shell">', unsafe_allow_html=True)
+market_table = df.tail(12).reset_index()
+st.dataframe(market_table, use_container_width=True, hide_index=True, height=320)
+st.caption("Latest rows are shown here so you can inspect the underlying market data used by the forecast.")
+st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown('<div class="section-title">Insights</div>', unsafe_allow_html=True)
 insight_col_1, insight_col_2 = st.columns(2)
