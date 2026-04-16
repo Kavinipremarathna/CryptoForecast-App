@@ -179,17 +179,19 @@ if df.empty:
     st.stop()
 
 close_prices = df[["Close"]].dropna()
-if len(close_prices) <= window:
+close_series = close_prices.iloc[:, 0].astype(float)
+
+if len(close_series) <= window:
     st.warning("The selected look-back window is too large for the available data. Reduce the window or increase the training history.")
     st.stop()
 
-latest_close = float(close_prices.iloc[-1, 0])
-previous_close = float(close_prices.iloc[-2, 0]) if len(close_prices) > 1 else latest_close
+latest_close = float(close_series.iloc[-1])
+previous_close = float(close_series.iloc[-2]) if len(close_series) > 1 else latest_close
 price_change = latest_close - previous_close
 price_change_pct = (price_change / previous_close * 100) if previous_close else 0.0
-period_high = float(close_prices["Close"].max())
-period_low = float(close_prices["Close"].min())
-first_close = float(close_prices.iloc[0, 0])
+period_high = float(close_series.max())
+period_low = float(close_series.min())
+first_close = float(close_series.iloc[0])
 period_return_pct = ((latest_close - first_close) / first_close * 100) if first_close else 0.0
 
 st.markdown('<div class="section-title">Market Overview</div>', unsafe_allow_html=True)
@@ -235,7 +237,7 @@ with overview_col_4:
 
 st.markdown('<div class="section-title">Forecast workspace</div>', unsafe_allow_html=True)
 
-data = close_prices[["Close"]].values
+data = close_series.to_numpy().reshape(-1, 1)
 
 # Scale
 scaler = MinMaxScaler()
